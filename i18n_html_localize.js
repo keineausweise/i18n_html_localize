@@ -15,18 +15,14 @@ function i18nLocalizeMessage(key){
 }
 
 function i18nLocalizeXpath(xpath){
-    var iterator = document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null );
-
-    try {
-        var thisNode = iterator.iterateNext();
-
-        while (thisNode) {
-            i18nLocalizeNodeText(thisNode);
-            thisNode = iterator.iterateNext();
-        }
+    function next(){
+        // for some reason this returns only the first match
+        var iterator = document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null );
+        return iterator.iterateNext();
     }
-    catch (e) {
-        console.log( 'Error: Document tree modified during iteration ' + e );
+
+    for (var n = next(); !!n; n = next()) {
+        i18nLocalizeNodeText(n);
     }
 }
 
